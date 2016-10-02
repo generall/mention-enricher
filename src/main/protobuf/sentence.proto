@@ -107,5 +107,12 @@ message Sentente {
   // Result of string parsing
   repeated Token parse_result = 4;
 
-  // Next available id: 1
+  // Sentence before observed
+  optional string prevSentence = 5;
+
+  // Sentence after observed
+  optional string nextSentence = 6;
+
+
+  // Next available id: 7
 }

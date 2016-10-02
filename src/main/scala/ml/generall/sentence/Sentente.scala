@@ -19,13 +19,19 @@ package ml.generall.sentence
   *   Required
   * @param parseResult
   *   Result of string parsing
+  * @param prevSentence
+  *   Sentence before observed
+  * @param nextSentence
+  *   Sentence after observed
   */
 @SerialVersionUID(0L)
 final case class Sentente(
     sent: scala.Option[String] = None,
     mentions: scala.collection.Seq[ml.generall.sentence.Mention] = Nil,
     parserName: scala.Option[String] = None,
-    parseResult: scala.collection.Seq[ml.generall.sentence.Token] = Nil
+    parseResult: scala.collection.Seq[ml.generall.sentence.Token] = Nil,
+    prevSentence: scala.Option[String] = None,
+    nextSentence: scala.Option[String] = None
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[Sentente] with com.trueaccord.lenses.Updatable[Sentente] {
     @transient
     private[this] var __serializedSizeCachedValue: Int = 0
@@ -35,6 +41,8 @@ final case class Sentente(
       mentions.foreach(mentions => __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(mentions.serializedSize) + mentions.serializedSize)
       if (parserName.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeStringSize(3, parserName.get) }
       parseResult.foreach(parseResult => __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(parseResult.serializedSize) + parseResult.serializedSize)
+      if (prevSentence.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeStringSize(5, prevSentence.get) }
+      if (nextSentence.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeStringSize(6, nextSentence.get) }
       __size
     }
     final override def serializedSize: Int = {
@@ -62,12 +70,20 @@ final case class Sentente(
         _output__.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(_output__)
       };
+      prevSentence.foreach { __v =>
+        _output__.writeString(5, __v)
+      };
+      nextSentence.foreach { __v =>
+        _output__.writeString(6, __v)
+      };
     }
     def mergeFrom(`_input__`: com.google.protobuf.CodedInputStream): ml.generall.sentence.Sentente = {
       var __sent = this.sent
       val __mentions = (scala.collection.immutable.Vector.newBuilder[ml.generall.sentence.Mention] ++= this.mentions)
       var __parserName = this.parserName
       val __parseResult = (scala.collection.immutable.Vector.newBuilder[ml.generall.sentence.Token] ++= this.parseResult)
+      var __prevSentence = this.prevSentence
+      var __nextSentence = this.nextSentence
       var _done__ = false
       while (!_done__) {
         val _tag__ = _input__.readTag()
@@ -81,6 +97,10 @@ final case class Sentente(
             __parserName = Some(_input__.readString())
           case 34 =>
             __parseResult += com.trueaccord.scalapb.LiteParser.readMessage(_input__, ml.generall.sentence.Token.defaultInstance)
+          case 42 =>
+            __prevSentence = Some(_input__.readString())
+          case 50 =>
+            __nextSentence = Some(_input__.readString())
           case tag => _input__.skipField(tag)
         }
       }
@@ -88,7 +108,9 @@ final case class Sentente(
           sent = __sent,
           mentions = __mentions.result(),
           parserName = __parserName,
-          parseResult = __parseResult.result()
+          parseResult = __parseResult.result(),
+          prevSentence = __prevSentence,
+          nextSentence = __nextSentence
       )
     }
     def getSent: String = sent.getOrElse("")
@@ -105,12 +127,20 @@ final case class Sentente(
     def addParseResult(__vs: ml.generall.sentence.Token*): Sentente = addAllParseResult(__vs)
     def addAllParseResult(__vs: TraversableOnce[ml.generall.sentence.Token]): Sentente = copy(parseResult = parseResult ++ __vs)
     def withParseResult(__v: scala.collection.Seq[ml.generall.sentence.Token]): Sentente = copy(parseResult = __v)
+    def getPrevSentence: String = prevSentence.getOrElse("")
+    def clearPrevSentence: Sentente = copy(prevSentence = None)
+    def withPrevSentence(__v: String): Sentente = copy(prevSentence = Some(__v))
+    def getNextSentence: String = nextSentence.getOrElse("")
+    def clearNextSentence: Sentente = copy(nextSentence = None)
+    def withNextSentence(__v: String): Sentente = copy(nextSentence = Some(__v))
     def getField(__field: com.google.protobuf.Descriptors.FieldDescriptor): scala.Any = {
       __field.getNumber match {
         case 1 => sent.getOrElse(null)
         case 2 => mentions
         case 3 => parserName.getOrElse(null)
         case 4 => parseResult
+        case 5 => prevSentence.getOrElse(null)
+        case 6 => nextSentence.getOrElse(null)
       }
     }
     override def toString: String = com.trueaccord.scalapb.TextFormat.printToUnicodeString(this)
@@ -126,7 +156,9 @@ object Sentente extends com.trueaccord.scalapb.GeneratedMessageCompanion[ml.gene
       __fieldsMap.get(__fields.get(0)).asInstanceOf[scala.Option[String]],
       __fieldsMap.getOrElse(__fields.get(1), Nil).asInstanceOf[scala.collection.Seq[ml.generall.sentence.Mention]],
       __fieldsMap.get(__fields.get(2)).asInstanceOf[scala.Option[String]],
-      __fieldsMap.getOrElse(__fields.get(3), Nil).asInstanceOf[scala.collection.Seq[ml.generall.sentence.Token]]
+      __fieldsMap.getOrElse(__fields.get(3), Nil).asInstanceOf[scala.collection.Seq[ml.generall.sentence.Token]],
+      __fieldsMap.get(__fields.get(4)).asInstanceOf[scala.Option[String]],
+      __fieldsMap.get(__fields.get(5)).asInstanceOf[scala.Option[String]]
     )
   }
   def descriptor: com.google.protobuf.Descriptors.Descriptor = SentenceProto.descriptor.getMessageTypes.get(6)
@@ -149,9 +181,15 @@ object Sentente extends com.trueaccord.scalapb.GeneratedMessageCompanion[ml.gene
     def parserName: com.trueaccord.lenses.Lens[UpperPB, String] = field(_.getParserName)((c_, f_) => c_.copy(parserName = Some(f_)))
     def optionalParserName: com.trueaccord.lenses.Lens[UpperPB, scala.Option[String]] = field(_.parserName)((c_, f_) => c_.copy(parserName = f_))
     def parseResult: com.trueaccord.lenses.Lens[UpperPB, scala.collection.Seq[ml.generall.sentence.Token]] = field(_.parseResult)((c_, f_) => c_.copy(parseResult = f_))
+    def prevSentence: com.trueaccord.lenses.Lens[UpperPB, String] = field(_.getPrevSentence)((c_, f_) => c_.copy(prevSentence = Some(f_)))
+    def optionalPrevSentence: com.trueaccord.lenses.Lens[UpperPB, scala.Option[String]] = field(_.prevSentence)((c_, f_) => c_.copy(prevSentence = f_))
+    def nextSentence: com.trueaccord.lenses.Lens[UpperPB, String] = field(_.getNextSentence)((c_, f_) => c_.copy(nextSentence = Some(f_)))
+    def optionalNextSentence: com.trueaccord.lenses.Lens[UpperPB, scala.Option[String]] = field(_.nextSentence)((c_, f_) => c_.copy(nextSentence = f_))
   }
   final val SENT_FIELD_NUMBER = 1
   final val MENTIONS_FIELD_NUMBER = 2
   final val PARSER_NAME_FIELD_NUMBER = 3
   final val PARSE_RESULT_FIELD_NUMBER = 4
+  final val PREVSENTENCE_FIELD_NUMBER = 5
+  final val NEXTSENTENCE_FIELD_NUMBER = 6
 }
