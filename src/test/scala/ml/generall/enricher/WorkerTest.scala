@@ -20,9 +20,41 @@ class WorkerTest extends FunSuite {
       ""
     )
 
-    val s = worker.processMention(m)
+    val badM = Mention(
+      "",
+      "I am very clever, push everything in one sentence",
+      "",
+      "http://stupid.com",
+      1.0,
+      ""
+    )
 
-    println(s.toString)
+    val veryBadM = Mention(
+      "I want to",
+      "desptoy this good analyser. Because I am",
+      "cookhacker",
+      "http://stupid.com",
+      1.0,
+      ""
+    )
+
+    val list = List(m, badM, veryBadM).par
+
+    val mList = list.map(x => worker.processMention(x)).toList
+
+    println(mList)
+
+  }
+
+
+  test("testDispatcher"){
+    val worker = new Worker("test_")
+
+    (0 to 20).par.foreach(x => {
+      worker.reader.dispatch() match {
+        case Some(m) => println(x.toString ++ " " ++ m.href)
+      }
+    })
 
   }
 
