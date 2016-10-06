@@ -11,8 +11,12 @@ package ml.generall.sentence
   *
   * @param sumWeight
   *   Summ weight of tokens
+  *   Required
   * @param avgWight
   *   average weight of tokens
+  *   Required
+  * @param maxWight
+  *   Max weight of tokens
   *   Required
   * @param wordCount
   *   count of tokens
@@ -20,17 +24,19 @@ package ml.generall.sentence
   */
 @SerialVersionUID(0L)
 final case class Params(
-    sumWeight: Double,
-    avgWight: Double,
-    wordCount: Int
+    sumWeight: scala.Option[Double] = None,
+    avgWight: scala.Option[Double] = None,
+    maxWight: scala.Option[Double] = None,
+    wordCount: scala.Option[Int] = None
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[Params] with com.trueaccord.lenses.Updatable[Params] {
     @transient
     private[this] var __serializedSizeCachedValue: Int = 0
     private[this] def __computeSerializedValue(): Int = {
       var __size = 0
-      __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(1, sumWeight)
-      __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(2, avgWight)
-      __size += com.google.protobuf.CodedOutputStream.computeInt32Size(3, wordCount)
+      if (sumWeight.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(1, sumWeight.get) }
+      if (avgWight.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(2, avgWight.get) }
+      if (maxWight.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(3, maxWight.get) }
+      if (wordCount.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeInt32Size(4, wordCount.get) }
       __size
     }
     final override def serializedSize: Int = {
@@ -42,13 +48,23 @@ final case class Params(
       read
     }
     def writeTo(`_output__`: com.google.protobuf.CodedOutputStream): Unit = {
-      _output__.writeDouble(1, sumWeight)
-      _output__.writeDouble(2, avgWight)
-      _output__.writeInt32(3, wordCount)
+      sumWeight.foreach { __v =>
+        _output__.writeDouble(1, __v)
+      };
+      avgWight.foreach { __v =>
+        _output__.writeDouble(2, __v)
+      };
+      maxWight.foreach { __v =>
+        _output__.writeDouble(3, __v)
+      };
+      wordCount.foreach { __v =>
+        _output__.writeInt32(4, __v)
+      };
     }
     def mergeFrom(`_input__`: com.google.protobuf.CodedInputStream): ml.generall.sentence.Params = {
       var __sumWeight = this.sumWeight
       var __avgWight = this.avgWight
+      var __maxWight = this.maxWight
       var __wordCount = this.wordCount
       var _done__ = false
       while (!_done__) {
@@ -56,28 +72,41 @@ final case class Params(
         _tag__ match {
           case 0 => _done__ = true
           case 9 =>
-            __sumWeight = _input__.readDouble()
+            __sumWeight = Some(_input__.readDouble())
           case 17 =>
-            __avgWight = _input__.readDouble()
-          case 24 =>
-            __wordCount = _input__.readInt32()
+            __avgWight = Some(_input__.readDouble())
+          case 25 =>
+            __maxWight = Some(_input__.readDouble())
+          case 32 =>
+            __wordCount = Some(_input__.readInt32())
           case tag => _input__.skipField(tag)
         }
       }
       ml.generall.sentence.Params(
           sumWeight = __sumWeight,
           avgWight = __avgWight,
+          maxWight = __maxWight,
           wordCount = __wordCount
       )
     }
-    def withSumWeight(__v: Double): Params = copy(sumWeight = __v)
-    def withAvgWight(__v: Double): Params = copy(avgWight = __v)
-    def withWordCount(__v: Int): Params = copy(wordCount = __v)
+    def getSumWeight: Double = sumWeight.getOrElse(0.0)
+    def clearSumWeight: Params = copy(sumWeight = None)
+    def withSumWeight(__v: Double): Params = copy(sumWeight = Some(__v))
+    def getAvgWight: Double = avgWight.getOrElse(0.0)
+    def clearAvgWight: Params = copy(avgWight = None)
+    def withAvgWight(__v: Double): Params = copy(avgWight = Some(__v))
+    def getMaxWight: Double = maxWight.getOrElse(0.0)
+    def clearMaxWight: Params = copy(maxWight = None)
+    def withMaxWight(__v: Double): Params = copy(maxWight = Some(__v))
+    def getWordCount: Int = wordCount.getOrElse(0)
+    def clearWordCount: Params = copy(wordCount = None)
+    def withWordCount(__v: Int): Params = copy(wordCount = Some(__v))
     def getField(__field: com.google.protobuf.Descriptors.FieldDescriptor): scala.Any = {
       __field.getNumber match {
-        case 1 => sumWeight
-        case 2 => avgWight
-        case 3 => wordCount
+        case 1 => sumWeight.getOrElse(null)
+        case 2 => avgWight.getOrElse(null)
+        case 3 => maxWight.getOrElse(null)
+        case 4 => wordCount.getOrElse(null)
       }
     }
     override def toString: String = com.trueaccord.scalapb.TextFormat.printToUnicodeString(this)
@@ -90,25 +119,29 @@ object Params extends com.trueaccord.scalapb.GeneratedMessageCompanion[ml.genera
     require(__fieldsMap.keys.forall(_.getContainingType() == descriptor), "FieldDescriptor does not match message type.")
     val __fields = descriptor.getFields
     ml.generall.sentence.Params(
-      __fieldsMap(__fields.get(0)).asInstanceOf[Double],
-      __fieldsMap(__fields.get(1)).asInstanceOf[Double],
-      __fieldsMap(__fields.get(2)).asInstanceOf[Int]
+      __fieldsMap.get(__fields.get(0)).asInstanceOf[scala.Option[Double]],
+      __fieldsMap.get(__fields.get(1)).asInstanceOf[scala.Option[Double]],
+      __fieldsMap.get(__fields.get(2)).asInstanceOf[scala.Option[Double]],
+      __fieldsMap.get(__fields.get(3)).asInstanceOf[scala.Option[Int]]
     )
   }
   def descriptor: com.google.protobuf.Descriptors.Descriptor = SentenceProto.descriptor.getMessageTypes.get(1)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__field)
   def enumCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedEnumCompanion[_] = throw new MatchError(__field)
   lazy val defaultInstance = ml.generall.sentence.Params(
-    sumWeight = 0.0,
-    avgWight = 0.0,
-    wordCount = 0
   )
   implicit class ParamsLens[UpperPB](_l: com.trueaccord.lenses.Lens[UpperPB, ml.generall.sentence.Params]) extends com.trueaccord.lenses.ObjectLens[UpperPB, ml.generall.sentence.Params](_l) {
-    def sumWeight: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.sumWeight)((c_, f_) => c_.copy(sumWeight = f_))
-    def avgWight: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.avgWight)((c_, f_) => c_.copy(avgWight = f_))
-    def wordCount: com.trueaccord.lenses.Lens[UpperPB, Int] = field(_.wordCount)((c_, f_) => c_.copy(wordCount = f_))
+    def sumWeight: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.getSumWeight)((c_, f_) => c_.copy(sumWeight = Some(f_)))
+    def optionalSumWeight: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Double]] = field(_.sumWeight)((c_, f_) => c_.copy(sumWeight = f_))
+    def avgWight: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.getAvgWight)((c_, f_) => c_.copy(avgWight = Some(f_)))
+    def optionalAvgWight: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Double]] = field(_.avgWight)((c_, f_) => c_.copy(avgWight = f_))
+    def maxWight: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.getMaxWight)((c_, f_) => c_.copy(maxWight = Some(f_)))
+    def optionalMaxWight: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Double]] = field(_.maxWight)((c_, f_) => c_.copy(maxWight = f_))
+    def wordCount: com.trueaccord.lenses.Lens[UpperPB, Int] = field(_.getWordCount)((c_, f_) => c_.copy(wordCount = Some(f_)))
+    def optionalWordCount: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Int]] = field(_.wordCount)((c_, f_) => c_.copy(wordCount = f_))
   }
   final val SUM_WEIGHT_FIELD_NUMBER = 1
   final val AVG_WIGHT_FIELD_NUMBER = 2
-  final val WORD_COUNT_FIELD_NUMBER = 3
+  final val MAX_WIGHT_FIELD_NUMBER = 3
+  final val WORD_COUNT_FIELD_NUMBER = 4
 }

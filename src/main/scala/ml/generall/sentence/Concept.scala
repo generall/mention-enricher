@@ -12,24 +12,40 @@ package ml.generall.sentence
   * @param link
   *   Link to concept
   *   Required
-  * @param weight
-  *   Weight of concept link
   * @param hits
   *   Count of hits
+  * @param avgScore
+  *   Average score
+  * @param maxScore
+  *   Max score
+  * @param minScore
+  *   Minimal score
+  * @param avgNorm
+  *   Average normalized score
+  * @param avgSoftMax
+  *   Average soft-max normalized score
   */
 @SerialVersionUID(0L)
 final case class Concept(
     link: String,
-    weight: scala.Option[Double] = None,
-    hits: scala.Option[Int] = None
+    hits: scala.Option[Int] = None,
+    avgScore: scala.Option[Double] = None,
+    maxScore: scala.Option[Double] = None,
+    minScore: scala.Option[Double] = None,
+    avgNorm: scala.Option[Double] = None,
+    avgSoftMax: scala.Option[Double] = None
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[Concept] with com.trueaccord.lenses.Updatable[Concept] {
     @transient
     private[this] var __serializedSizeCachedValue: Int = 0
     private[this] def __computeSerializedValue(): Int = {
       var __size = 0
       __size += com.google.protobuf.CodedOutputStream.computeStringSize(1, link)
-      if (weight.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(2, weight.get) }
-      if (hits.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeInt32Size(3, hits.get) }
+      if (hits.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeInt32Size(2, hits.get) }
+      if (avgScore.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(3, avgScore.get) }
+      if (maxScore.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(4, maxScore.get) }
+      if (minScore.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(5, minScore.get) }
+      if (avgNorm.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(6, avgNorm.get) }
+      if (avgSoftMax.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeDoubleSize(7, avgSoftMax.get) }
       __size
     }
     final override def serializedSize: Int = {
@@ -42,17 +58,33 @@ final case class Concept(
     }
     def writeTo(`_output__`: com.google.protobuf.CodedOutputStream): Unit = {
       _output__.writeString(1, link)
-      weight.foreach { __v =>
-        _output__.writeDouble(2, __v)
-      };
       hits.foreach { __v =>
-        _output__.writeInt32(3, __v)
+        _output__.writeInt32(2, __v)
+      };
+      avgScore.foreach { __v =>
+        _output__.writeDouble(3, __v)
+      };
+      maxScore.foreach { __v =>
+        _output__.writeDouble(4, __v)
+      };
+      minScore.foreach { __v =>
+        _output__.writeDouble(5, __v)
+      };
+      avgNorm.foreach { __v =>
+        _output__.writeDouble(6, __v)
+      };
+      avgSoftMax.foreach { __v =>
+        _output__.writeDouble(7, __v)
       };
     }
     def mergeFrom(`_input__`: com.google.protobuf.CodedInputStream): ml.generall.sentence.Concept = {
       var __link = this.link
-      var __weight = this.weight
       var __hits = this.hits
+      var __avgScore = this.avgScore
+      var __maxScore = this.maxScore
+      var __minScore = this.minScore
+      var __avgNorm = this.avgNorm
+      var __avgSoftMax = this.avgSoftMax
       var _done__ = false
       while (!_done__) {
         val _tag__ = _input__.readTag()
@@ -60,31 +92,59 @@ final case class Concept(
           case 0 => _done__ = true
           case 10 =>
             __link = _input__.readString()
-          case 17 =>
-            __weight = Some(_input__.readDouble())
-          case 24 =>
+          case 16 =>
             __hits = Some(_input__.readInt32())
+          case 25 =>
+            __avgScore = Some(_input__.readDouble())
+          case 33 =>
+            __maxScore = Some(_input__.readDouble())
+          case 41 =>
+            __minScore = Some(_input__.readDouble())
+          case 49 =>
+            __avgNorm = Some(_input__.readDouble())
+          case 57 =>
+            __avgSoftMax = Some(_input__.readDouble())
           case tag => _input__.skipField(tag)
         }
       }
       ml.generall.sentence.Concept(
           link = __link,
-          weight = __weight,
-          hits = __hits
+          hits = __hits,
+          avgScore = __avgScore,
+          maxScore = __maxScore,
+          minScore = __minScore,
+          avgNorm = __avgNorm,
+          avgSoftMax = __avgSoftMax
       )
     }
     def withLink(__v: String): Concept = copy(link = __v)
-    def getWeight: Double = weight.getOrElse(0.0)
-    def clearWeight: Concept = copy(weight = None)
-    def withWeight(__v: Double): Concept = copy(weight = Some(__v))
     def getHits: Int = hits.getOrElse(0)
     def clearHits: Concept = copy(hits = None)
     def withHits(__v: Int): Concept = copy(hits = Some(__v))
+    def getAvgScore: Double = avgScore.getOrElse(0.0)
+    def clearAvgScore: Concept = copy(avgScore = None)
+    def withAvgScore(__v: Double): Concept = copy(avgScore = Some(__v))
+    def getMaxScore: Double = maxScore.getOrElse(0.0)
+    def clearMaxScore: Concept = copy(maxScore = None)
+    def withMaxScore(__v: Double): Concept = copy(maxScore = Some(__v))
+    def getMinScore: Double = minScore.getOrElse(0.0)
+    def clearMinScore: Concept = copy(minScore = None)
+    def withMinScore(__v: Double): Concept = copy(minScore = Some(__v))
+    def getAvgNorm: Double = avgNorm.getOrElse(0.0)
+    def clearAvgNorm: Concept = copy(avgNorm = None)
+    def withAvgNorm(__v: Double): Concept = copy(avgNorm = Some(__v))
+    def getAvgSoftMax: Double = avgSoftMax.getOrElse(0.0)
+    def clearAvgSoftMax: Concept = copy(avgSoftMax = None)
+    def withAvgSoftMax(__v: Double): Concept = copy(avgSoftMax = Some(__v))
     def getField(__field: com.google.protobuf.Descriptors.FieldDescriptor): scala.Any = {
       __field.getNumber match {
         case 1 => link
-        case 2 => weight.getOrElse(null)
-        case 3 => hits.getOrElse(null)
+        case 2 => hits.getOrElse(null)
+        case 3 => avgScore.getOrElse(null)
+        case 4 => maxScore.getOrElse(null)
+        case 5 => minScore.getOrElse(null)
+        case 6 => avgNorm.getOrElse(null)
+        case 7 => avgSoftMax.getOrElse(null)
       }
     }
     override def toString: String = com.trueaccord.scalapb.TextFormat.printToUnicodeString(this)
@@ -98,8 +158,12 @@ object Concept extends com.trueaccord.scalapb.GeneratedMessageCompanion[ml.gener
     val __fields = descriptor.getFields
     ml.generall.sentence.Concept(
       __fieldsMap(__fields.get(0)).asInstanceOf[String],
-      __fieldsMap.get(__fields.get(1)).asInstanceOf[scala.Option[Double]],
-      __fieldsMap.get(__fields.get(2)).asInstanceOf[scala.Option[Int]]
+      __fieldsMap.get(__fields.get(1)).asInstanceOf[scala.Option[Int]],
+      __fieldsMap.get(__fields.get(2)).asInstanceOf[scala.Option[Double]],
+      __fieldsMap.get(__fields.get(3)).asInstanceOf[scala.Option[Double]],
+      __fieldsMap.get(__fields.get(4)).asInstanceOf[scala.Option[Double]],
+      __fieldsMap.get(__fields.get(5)).asInstanceOf[scala.Option[Double]],
+      __fieldsMap.get(__fields.get(6)).asInstanceOf[scala.Option[Double]]
     )
   }
   def descriptor: com.google.protobuf.Descriptors.Descriptor = SentenceProto.descriptor.getMessageTypes.get(3)
@@ -110,12 +174,24 @@ object Concept extends com.trueaccord.scalapb.GeneratedMessageCompanion[ml.gener
   )
   implicit class ConceptLens[UpperPB](_l: com.trueaccord.lenses.Lens[UpperPB, ml.generall.sentence.Concept]) extends com.trueaccord.lenses.ObjectLens[UpperPB, ml.generall.sentence.Concept](_l) {
     def link: com.trueaccord.lenses.Lens[UpperPB, String] = field(_.link)((c_, f_) => c_.copy(link = f_))
-    def weight: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.getWeight)((c_, f_) => c_.copy(weight = Some(f_)))
-    def optionalWeight: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Double]] = field(_.weight)((c_, f_) => c_.copy(weight = f_))
     def hits: com.trueaccord.lenses.Lens[UpperPB, Int] = field(_.getHits)((c_, f_) => c_.copy(hits = Some(f_)))
     def optionalHits: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Int]] = field(_.hits)((c_, f_) => c_.copy(hits = f_))
+    def avgScore: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.getAvgScore)((c_, f_) => c_.copy(avgScore = Some(f_)))
+    def optionalAvgScore: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Double]] = field(_.avgScore)((c_, f_) => c_.copy(avgScore = f_))
+    def maxScore: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.getMaxScore)((c_, f_) => c_.copy(maxScore = Some(f_)))
+    def optionalMaxScore: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Double]] = field(_.maxScore)((c_, f_) => c_.copy(maxScore = f_))
+    def minScore: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.getMinScore)((c_, f_) => c_.copy(minScore = Some(f_)))
+    def optionalMinScore: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Double]] = field(_.minScore)((c_, f_) => c_.copy(minScore = f_))
+    def avgNorm: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.getAvgNorm)((c_, f_) => c_.copy(avgNorm = Some(f_)))
+    def optionalAvgNorm: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Double]] = field(_.avgNorm)((c_, f_) => c_.copy(avgNorm = f_))
+    def avgSoftMax: com.trueaccord.lenses.Lens[UpperPB, Double] = field(_.getAvgSoftMax)((c_, f_) => c_.copy(avgSoftMax = Some(f_)))
+    def optionalAvgSoftMax: com.trueaccord.lenses.Lens[UpperPB, scala.Option[Double]] = field(_.avgSoftMax)((c_, f_) => c_.copy(avgSoftMax = f_))
   }
   final val LINK_FIELD_NUMBER = 1
-  final val WEIGHT_FIELD_NUMBER = 2
-  final val HITS_FIELD_NUMBER = 3
+  final val HITS_FIELD_NUMBER = 2
+  final val AVGSCORE_FIELD_NUMBER = 3
+  final val MAXSCORE_FIELD_NUMBER = 4
+  final val MINSCORE_FIELD_NUMBER = 5
+  final val AVGNORM_FIELD_NUMBER = 6
+  final val AVGSOFTMAX_FIELD_NUMBER = 7
 }

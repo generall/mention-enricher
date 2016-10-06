@@ -14,6 +14,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test"
 libraryDependencies += "ml.generall" %% "scala-common" % "1.0-SNAPSHOT"
 
 libraryDependencies += "ml.generall" %% "ner-scala" % "1.0-SNAPSHOT"
+libraryDependencies += "ml.generall" %% "elastic-scala" % "1.0-SNAPSHOT"
 
 
 libraryDependencies += "com.trueaccord.scalapb" %% "compilerplugin" % "0.5.42"

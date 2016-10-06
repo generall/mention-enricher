@@ -11,7 +11,7 @@ package ml.generall.sentence
   *
   * @param id
   *   id of mention
-  *   Required int64 id = 1; 
+  *   Required int64 id = 1;
   * @param resolver
   *   Resolver name: elastic or wikimention
   *   Required
@@ -32,10 +32,10 @@ package ml.generall.sentence
   */
 @SerialVersionUID(0L)
 final case class Mention(
-    id: Long,
+    id: Int,
     resolver: scala.Option[String] = None,
-    text: String,
-    position: ml.generall.sentence.Position,
+    text: scala.Option[String] = None,
+    position: scala.Option[ml.generall.sentence.Position] = None,
     params: scala.Option[ml.generall.sentence.Params] = None,
     context: scala.Option[ml.generall.sentence.Context] = None,
     concepts: scala.collection.Seq[ml.generall.sentence.Concept] = Nil
@@ -44,10 +44,10 @@ final case class Mention(
     private[this] var __serializedSizeCachedValue: Int = 0
     private[this] def __computeSerializedValue(): Int = {
       var __size = 0
-      __size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, id)
+      __size += com.google.protobuf.CodedOutputStream.computeInt32Size(1, id)
       if (resolver.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeStringSize(2, resolver.get) }
-      __size += com.google.protobuf.CodedOutputStream.computeStringSize(3, text)
-      __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(position.serializedSize) + position.serializedSize
+      if (text.isDefined) { __size += com.google.protobuf.CodedOutputStream.computeStringSize(3, text.get) }
+      if (position.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(position.get.serializedSize) + position.get.serializedSize }
       if (params.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(params.get.serializedSize) + params.get.serializedSize }
       if (context.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(context.get.serializedSize) + context.get.serializedSize }
       concepts.foreach(concepts => __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(concepts.serializedSize) + concepts.serializedSize)
@@ -62,14 +62,18 @@ final case class Mention(
       read
     }
     def writeTo(`_output__`: com.google.protobuf.CodedOutputStream): Unit = {
-      _output__.writeInt64(1, id)
+      _output__.writeInt32(1, id)
       resolver.foreach { __v =>
         _output__.writeString(2, __v)
       };
-      _output__.writeString(3, text)
-      _output__.writeTag(4, 2)
-      _output__.writeUInt32NoTag(position.serializedSize)
-      position.writeTo(_output__)
+      text.foreach { __v =>
+        _output__.writeString(3, __v)
+      };
+      position.foreach { __v =>
+        _output__.writeTag(4, 2)
+        _output__.writeUInt32NoTag(__v.serializedSize)
+        __v.writeTo(_output__)
+      };
       params.foreach { __v =>
         _output__.writeTag(5, 2)
         _output__.writeUInt32NoTag(__v.serializedSize)
@@ -100,13 +104,13 @@ final case class Mention(
         _tag__ match {
           case 0 => _done__ = true
           case 8 =>
-            __id = _input__.readInt64()
+            __id = _input__.readInt32()
           case 18 =>
             __resolver = Some(_input__.readString())
           case 26 =>
-            __text = _input__.readString()
+            __text = Some(_input__.readString())
           case 34 =>
-            __position = com.trueaccord.scalapb.LiteParser.readMessage(_input__, __position)
+            __position = Some(com.trueaccord.scalapb.LiteParser.readMessage(_input__, __position.getOrElse(ml.generall.sentence.Position.defaultInstance)))
           case 42 =>
             __params = Some(com.trueaccord.scalapb.LiteParser.readMessage(_input__, __params.getOrElse(ml.generall.sentence.Params.defaultInstance)))
           case 50 =>
@@ -126,12 +130,16 @@ final case class Mention(
           concepts = __concepts.result()
       )
     }
-    def withId(__v: Long): Mention = copy(id = __v)
+    def withId(__v: Int): Mention = copy(id = __v)
     def getResolver: String = resolver.getOrElse("")
     def clearResolver: Mention = copy(resolver = None)
     def withResolver(__v: String): Mention = copy(resolver = Some(__v))
-    def withText(__v: String): Mention = copy(text = __v)
-    def withPosition(__v: ml.generall.sentence.Position): Mention = copy(position = __v)
+    def getText: String = text.getOrElse("")
+    def clearText: Mention = copy(text = None)
+    def withText(__v: String): Mention = copy(text = Some(__v))
+    def getPosition: ml.generall.sentence.Position = position.getOrElse(ml.generall.sentence.Position.defaultInstance)
+    def clearPosition: Mention = copy(position = None)
+    def withPosition(__v: ml.generall.sentence.Position): Mention = copy(position = Some(__v))
     def getParams: ml.generall.sentence.Params = params.getOrElse(ml.generall.sentence.Params.defaultInstance)
     def clearParams: Mention = copy(params = None)
     def withParams(__v: ml.generall.sentence.Params): Mention = copy(params = Some(__v))
@@ -146,8 +154,8 @@ final case class Mention(
       __field.getNumber match {
         case 1 => id
         case 2 => resolver.getOrElse(null)
-        case 3 => text
-        case 4 => position
+        case 3 => text.getOrElse(null)
+        case 4 => position.getOrElse(null)
         case 5 => params.getOrElse(null)
         case 6 => context.getOrElse(null)
         case 7 => concepts
@@ -163,10 +171,10 @@ object Mention extends com.trueaccord.scalapb.GeneratedMessageCompanion[ml.gener
     require(__fieldsMap.keys.forall(_.getContainingType() == descriptor), "FieldDescriptor does not match message type.")
     val __fields = descriptor.getFields
     ml.generall.sentence.Mention(
-      __fieldsMap(__fields.get(0)).asInstanceOf[Long],
+      __fieldsMap(__fields.get(0)).asInstanceOf[Int],
       __fieldsMap.get(__fields.get(1)).asInstanceOf[scala.Option[String]],
-      __fieldsMap(__fields.get(2)).asInstanceOf[String],
-      __fieldsMap(__fields.get(3)).asInstanceOf[ml.generall.sentence.Position],
+      __fieldsMap.get(__fields.get(2)).asInstanceOf[scala.Option[String]],
+      __fieldsMap.get(__fields.get(3)).asInstanceOf[scala.Option[ml.generall.sentence.Position]],
       __fieldsMap.get(__fields.get(4)).asInstanceOf[scala.Option[ml.generall.sentence.Params]],
       __fieldsMap.get(__fields.get(5)).asInstanceOf[scala.Option[ml.generall.sentence.Context]],
       __fieldsMap.getOrElse(__fields.get(6), Nil).asInstanceOf[scala.collection.Seq[ml.generall.sentence.Concept]]
@@ -186,16 +194,16 @@ object Mention extends com.trueaccord.scalapb.GeneratedMessageCompanion[ml.gener
   }
   def enumCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedEnumCompanion[_] = throw new MatchError(__field)
   lazy val defaultInstance = ml.generall.sentence.Mention(
-    id = 0L,
-    text = "",
-    position = ml.generall.sentence.Position.defaultInstance
+    id = 0
   )
   implicit class MentionLens[UpperPB](_l: com.trueaccord.lenses.Lens[UpperPB, ml.generall.sentence.Mention]) extends com.trueaccord.lenses.ObjectLens[UpperPB, ml.generall.sentence.Mention](_l) {
-    def id: com.trueaccord.lenses.Lens[UpperPB, Long] = field(_.id)((c_, f_) => c_.copy(id = f_))
+    def id: com.trueaccord.lenses.Lens[UpperPB, Int] = field(_.id)((c_, f_) => c_.copy(id = f_))
     def resolver: com.trueaccord.lenses.Lens[UpperPB, String] = field(_.getResolver)((c_, f_) => c_.copy(resolver = Some(f_)))
     def optionalResolver: com.trueaccord.lenses.Lens[UpperPB, scala.Option[String]] = field(_.resolver)((c_, f_) => c_.copy(resolver = f_))
-    def text: com.trueaccord.lenses.Lens[UpperPB, String] = field(_.text)((c_, f_) => c_.copy(text = f_))
-    def position: com.trueaccord.lenses.Lens[UpperPB, ml.generall.sentence.Position] = field(_.position)((c_, f_) => c_.copy(position = f_))
+    def text: com.trueaccord.lenses.Lens[UpperPB, String] = field(_.getText)((c_, f_) => c_.copy(text = Some(f_)))
+    def optionalText: com.trueaccord.lenses.Lens[UpperPB, scala.Option[String]] = field(_.text)((c_, f_) => c_.copy(text = f_))
+    def position: com.trueaccord.lenses.Lens[UpperPB, ml.generall.sentence.Position] = field(_.getPosition)((c_, f_) => c_.copy(position = Some(f_)))
+    def optionalPosition: com.trueaccord.lenses.Lens[UpperPB, scala.Option[ml.generall.sentence.Position]] = field(_.position)((c_, f_) => c_.copy(position = f_))
     def params: com.trueaccord.lenses.Lens[UpperPB, ml.generall.sentence.Params] = field(_.getParams)((c_, f_) => c_.copy(params = Some(f_)))
     def optionalParams: com.trueaccord.lenses.Lens[UpperPB, scala.Option[ml.generall.sentence.Params]] = field(_.params)((c_, f_) => c_.copy(params = f_))
     def context: com.trueaccord.lenses.Lens[UpperPB, ml.generall.sentence.Context] = field(_.getContext)((c_, f_) => c_.copy(context = Some(f_)))
