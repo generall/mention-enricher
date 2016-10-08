@@ -58,4 +58,14 @@ class WorkerTest extends FunSuite {
 
   }
 
+
+  test("testWorker"){
+    (0 to 3).par.foreach( x => {
+      val worker = new Worker(s"test_$x")
+      val stat = worker.work(40)
+      println(stat.toString)
+    })
+
+  }
+
 }

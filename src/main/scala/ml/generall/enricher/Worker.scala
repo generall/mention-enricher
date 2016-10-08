@@ -1,5 +1,7 @@
 package ml.generall.enricher
 
+import java.io.FileOutputStream
+
 import ml.generall.elastic.{ConceptVariant, Sentence, Mention}
 import ml.generall.isDebug
 import ml.generall.ner.elements.ContextElementConverter
@@ -23,6 +25,10 @@ class Worker(
 
   val contextSize = 7
 
+  val stat = WorkerStat()
+
+  val protobufOutputStream = new FileOutputStream(storagePrefix ++ "_sentences.pb")
+
   def conceptVariantToPB(conceptVariant: ConceptVariant): Concept = {
     Concept(conceptVariant.concept,
       hits = Some(conceptVariant.count),
@@ -34,7 +40,7 @@ class Worker(
     )
   }
 
-  def processMention(mention: Mention) = {
+  def processMention(mention: Mention): Sentente = {
     val sent = new Sentence(mention)
 
     val conceptVariant = List(ConceptVariant(
@@ -51,9 +57,15 @@ class Worker(
     sent.chunks match {
       case List(firstChunk, middleChunk, lastChunk) =>
 
-        val startMentionPos = firstChunk.text.length + 1
-        val endMentionPos = middleChunk.text.length + startMentionPos + 1
-        val text = firstChunk.text ++ " " ++ middleChunk.text ++ " " ++ lastChunk.text
+        val firstChunkText = firstChunk.text.replaceAll("\\P{InBasic_Latin}", "")
+        val middleChunkText = middleChunk.text.replaceAll("\\P{InBasic_Latin}", "")
+        val lastChunkText = lastChunk.text.replaceAll("\\P{InBasic_Latin}", "")
+
+        val startMentionPos = firstChunkText.length + 1
+        val endMentionPos = middleChunkText.length + startMentionPos + 1
+
+        val text = firstChunkText ++ " " ++ middleChunkText ++ " " ++ lastChunkText
+
         try {
           val sentenceRange = builder.splitter.getSentence(text, (startMentionPos, endMentionPos)) match {
             case None =>
@@ -73,8 +85,8 @@ class Worker(
             resolver = Some("wikilink"),
             context = Some(
               Context(-1,
-                left = Some(firstChunk.text),
-                right = Some(lastChunk.text)
+                left = Some(firstChunkText),
+                right = Some(lastChunkText)
               )
             ))
 
@@ -202,8 +214,8 @@ class Worker(
               resolver = Some("wikilink"),
               context = Some(
                 Context(-1,
-                  left = Some(firstChunk.text),
-                  right = Some(lastChunk.text)
+                  left = Some(firstChunkText),
+                  right = Some(lastChunkText)
                 )
               ))
 
@@ -216,16 +228,52 @@ class Worker(
     }
   }
 
-  def work() = {
+  def work(lim: Int = -1): WorkerStat = {
+
+    stat.reset
     var mention: Option[Mention] = reader.dispatch()
     while (mention.nonEmpty) {
       try {
-        processMention(mention.get)
+
+        val t0 = System.currentTimeMillis()
+
+        val sent: Sentente = processMention(mention.get)
+
+        val t1 = System.currentTimeMillis()
+        val deltaTime = t1 - t0
+
+        stat.processed += 1
+        stat.totalTimeMs += deltaTime
+
+        if(deltaTime > stat.maxTimeMs) stat.maxTimeMs = deltaTime
+        stat.avgTime = stat.totalTimeMs / stat.processed
+        stat.mentionCount += sent.mentions.size
+
+        sent.parserName match {
+          case Some("None") => stat.skipCount += 1
+          case _ =>
+        }
+
+        if(stat.processed % 1000 == 0){
+          FileLogger.logToFile(s"${storagePrefix}_log_stat.txt", stat.toString)
+        }
+
+        sent.writeDelimitedTo(protobufOutputStream)
+
+        if(stat.processed == lim)
+          return stat
+
+
       } catch {
-        case ex: UnparsableException => FileLogger.logToFile(s"${storagePrefix}_parse_error.txt", ex.text)
+        case ex: Exception => {
+          println(ex.getMessage)
+          ex.printStackTrace()
+          FileLogger.logToFile(s"${storagePrefix}_parse_error.txt", ex.getMessage)
+        }
       }
       mention = reader.dispatch()
     }
+    stat
   }
 
 }

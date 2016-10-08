@@ -1,6 +1,5 @@
 import java.io.{FileInputStream, FileOutputStream}
 
-import com.google.protobuf.CodedOutputStream
 import ml.generall.sentence.Concept
 
 
