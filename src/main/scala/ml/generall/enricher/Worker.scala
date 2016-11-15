@@ -94,7 +94,7 @@ class Worker(
           val parseRes = analyser.parser.process(sentence)
 
           val groups = parseRes.zipWithIndex
-            .groupBy({ case (record, idx) => (record.parseTag, record.ner, record.groupId) })
+            .groupBy({ case (record, idx) => (record.parseTag, 0/*record.ner*/, record.groupId) })
             .toList
             .sortBy(x => x._2.head._2)
             .map(pair => (s"${pair._1._1}" /* _${pair._1._2} */ , pair._2.map(_._1))) // creation of state
@@ -205,7 +205,7 @@ class Worker(
           /**
             * Handle unparsable sentences. Produce minimal output
             */
-          case ex: UnparsableException =>
+          case _ : UnparsableException | _ : AssertionError =>
 
             val sourceMention = ml.generall.sentence.Mention(0,
               position = Some(Position(startMentionPos, endMentionPos)),

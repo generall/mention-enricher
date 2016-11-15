@@ -11,7 +11,7 @@ object ConvertApp extends App{
   case class Config(
                      var threads: Int = 1,
                      var limit: Int = -1,
-                     var offset:Int = 0
+                     var offset: String = ""
                    )
 
 
@@ -28,7 +28,7 @@ object ConvertApp extends App{
       c
     } ).text("Limit sentences per worker")
 
-    opt[Int]('o', "offset").action( (x, c) => {
+    opt[String]('o', "offset").action( (x, c) => {
       c.offset = x
       c
     } ).text("Offset sentences")
@@ -40,8 +40,8 @@ object ConvertApp extends App{
   // parser.parse returns Option[C]
   parser.parse(args, Config()) match {
     case Some(config) =>
-      if(config.offset > 0) {
-        Reader.skipMany(config.offset)
+      if(config.offset != "") {
+        Reader.lastUid = Some(config.offset)
       }
       (1 to config.threads).par.foreach( x => {
         val worker = new Worker(s"worker_$x")
