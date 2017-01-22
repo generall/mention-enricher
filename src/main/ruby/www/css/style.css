@@ -1,0 +1,30 @@
+.mention_wikilink{
+  color: #FF8A0E;
+}
+
+.mention_elastic{
+  color: #223FC7;
+}
+
+.mention_elastic > .mention_wikilink {
+  color: #BD6100;
+}
+
+.mention_wikilink > .mention_elastic {
+  color: #BD6100;
+}
+
+
+.wikilink {
+  border-left: solid 2px #F57E00;
+}
+
+.bar {
+  height: 13px;
+  background-color: #008A2F;
+  border: 1px solid #999;
+}
+
+.mention{
+  margin-top: 20px;
+}

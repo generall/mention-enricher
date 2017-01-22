@@ -108,7 +108,7 @@ message Token {
 }
 
 // Sentence object. 
-message Sentente {
+message Sentence {
     // Complete sentence text
     optional string sent = 1;  // Required
 
