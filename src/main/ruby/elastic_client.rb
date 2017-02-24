@@ -15,8 +15,8 @@ class WikiSeracher
   end
 
 
-  def add_records(records, index:, type:)
-    @client.bulk body: records.map do |record|
+  def gen_data(records, index, type)
+    records.map do |record|
       {
         index: {
           _index: index,
@@ -25,5 +25,9 @@ class WikiSeracher
         }
       }
     end
+  end
+
+  def add_records(records, index:, type:)
+    @client.bulk body: gen_data(records, index, type)
   end
 end
