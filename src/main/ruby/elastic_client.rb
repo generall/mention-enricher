@@ -4,12 +4,14 @@ require 'elasticsearch'
 
 class WikiSeracher
 
+  attr_accessor :client
+
   def initialize
     @client = Elasticsearch::Client.new log: false
   end
 
-  def add_mention(mention)
-    @client.index index: 'wiki', type: 'mention', body: mention
+  def add_record(record, index:, type:)
+    @client.index index: index, type: type, body: record
   end
 
 
