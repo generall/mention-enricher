@@ -1,0 +1,16 @@
+version '2'
+
+services:
+  elastic:
+    image: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./data/elastic:/usr/share/elasticsearch/config
+    network:
+      - sknn_net
+
+networks:
+  sknn_net:
+
