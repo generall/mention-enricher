@@ -1,56 +1,70 @@
 {
   "mappings": {
     "sentence": {
-      "sent": {
-        "type": "string"
-      },
-      "parser_name": {
-        "type": "string",
-        "index": "not_analyzed"
-      },
-      "prevSentence": {
-        "type": "string"
-      },
-      "nextSentence": {
-        "type": "string"
-      },
+      "properties":{
+        "sent": {
+          "type": "string"
+        },
+        "parser_name": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "prevSentence": {
+          "type": "string"
+        },
+        "nextSentence": {
+          "type": "string"
+        },
 
-      "parse_result": {
-        "token" : {"type": "string", "index": "not_analized"},
-        "lemma" : {"type": "string", "index": "not_analized"},
-        "pos_tag" : {"type": "string", "index": "not_analized"},
-        "parserTag" : {"type": "string", "index": "not_analized"},
-        "group" : {"type": "integer"},
-        "mention" : {"type": "integer"}
-      },
+        "parse_result": {
+          "properties":{
+            "token" : {"type": "string", "index": "not_analyzed"},
+            "lemma" : {"type": "string", "index": "not_analyzed"},
+            "pos_tag" : {"type": "string", "index": "not_analyzed"},
+            "parserTag" : {"type": "string", "index": "not_analyzed"},
+            "group" : {"type": "integer"},
+            "mention" : {"type": "integer"}
+          }
+        },
 
-      "mentions": {
-        "id" : {"type": "integer"},
-        "resolver" : {"type": "string", "index": "not_analized"},
-        "text" : {"type": "string"},
-        "position": {
-          "fromPos": {"type": "integer"},
-          "toPos": {"type": "integer"}
-        },
-        "params": {
-          "sum_weight": {"type": "double"},
-          "avg_wight": {"type": "double"},
-          "max_wight": {"type": "double"},
-          "word_count": {"type": "integer"}
-        },
-        "context": {
-          "size": {"type": "integer"},
-          "left": {"type": "string"},
-          "right": {"type": "string"}
-        },
-        "concepts": {
-          "link": {"type": "string", "index": "not_analized"},
-          "hits": {"type": "integer"},
-          "avgScore": {"type": "double"},
-          "maxScore": {"type": "double"},
-          "minScore": {"type": "double"},
-          "avgNorm": {"type": "double"},
-          "avgSoftMax": {"type": "double"}
+        "mentions": {
+          "properties":{
+            "id" : {"type": "integer"},
+            "resolver" : {"type": "string", "index": "not_analyzed"},
+            "text" : {"type": "string"},
+            "position": {
+              "properties":{
+                "fromPos": {"type": "integer"},
+                "toPos": {"type": "integer"}
+              }
+            },
+            "params": {
+              "properties":{
+                "sum_weight": {"type": "double"},
+                "avg_wight": {"type": "double"},
+                "max_wight": {"type": "double"},
+                "word_count": {"type": "integer"}
+              }
+            },
+            "context": {
+              "properties":{
+                "size": {"type": "integer"},
+                "left": {"type": "string"},
+                "right": {"type": "string"}
+              }
+            },
+            "concepts": {
+              "properties":{
+                "link": {"type": "string", "index": "not_analyzed"},
+                "hits": {"type": "integer"},
+                "avgScore": {"type": "double"},
+                "maxScore": {"type": "double"},
+                "minScore": {"type": "double"},
+                "avgNorm": {"type": "double"},
+                "avgSoftMax": {"type": "double"}
+              }
+            }
+          }
         }
       }
     }
