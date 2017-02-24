@@ -3,6 +3,7 @@ version: '2'
 services:
   elastic:
     image: elasticsearch
+    command: elasticsearch -Dlog4j.configurationFile=
     ports:
       - "9200:9200"
       - "9300:9300"
