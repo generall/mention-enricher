@@ -83,7 +83,12 @@ end
 
 def main
  enum = read_files(ARGV)
- require 'pry'; binding.pry
+ el = WikiSeracher.new
+
+ enum.each_slice(10000).with_index do |buffer, idx|
+   puts "Loading: #{idx}"
+   el.add_records(buffer, index: 'sknn-train', type: 'sentence')
+ end
 end
 
 if $0 == __FILE__
