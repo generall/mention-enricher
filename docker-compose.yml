@@ -1,16 +1,26 @@
 version: '2'
-
 services:
-  elastic:
+  elasticsearch1:
     image: elasticsearch
-    ports:
-      - "9200:9200"
-      - "9300:9300"
+    container_name: elasticsearch1
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 4g
+    cap_add:
+      - IPC_LOCK
     volumes:
-      - ./data/elastic:/usr/share/elasticsearch/config
-    networks:
-      - sknn_net
-
-networks:
-  sknn_net:
+      - ./data/elastic:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    network_mode: "host"
 
