@@ -3,35 +3,35 @@
     "sentence": {
       "properties":{
         "sent": {
-          "type": "string"
+          "type": "text"
         },
         "parser_name": {
-          "type": "string",
-          "index": "not_analyzed"
+          "type": "keyword"
         },
         "prevSentence": {
-          "type": "string"
+          "type": "text"
         },
         "nextSentence": {
-          "type": "string"
+          "type": "text"
         },
 
         "parse_result": {
           "properties":{
-            "token" : {"type": "string", "index": "not_analyzed"},
-            "lemma" : {"type": "string", "index": "not_analyzed"},
-            "pos_tag" : {"type": "string", "index": "not_analyzed"},
-            "parserTag" : {"type": "string", "index": "not_analyzed"},
+            "token" : {"type": "keyword"},
+            "lemma" : {"type": "keyword"},
+            "pos_tag" : {"type": "keyword"},
+            "parserTag" : {"type": "keyword"},
             "group" : {"type": "integer"},
             "mention" : {"type": "integer"}
           }
         },
 
         "mentions": {
+          "type": "nested",
           "properties":{
             "id" : {"type": "integer"},
-            "resolver" : {"type": "string", "index": "not_analyzed"},
-            "text" : {"type": "string"},
+            "resolver" : {"type": "keyword"},
+            "text" : {"type": "text"},
             "position": {
               "properties":{
                 "fromPos": {"type": "integer"},
@@ -49,13 +49,13 @@
             "context": {
               "properties":{
                 "size": {"type": "integer"},
-                "left": {"type": "string"},
-                "right": {"type": "string"}
+                "left": {"type": "text"},
+                "right": {"type": "text"}
               }
             },
             "concepts": {
               "properties":{
-                "link": {"type": "string", "index": "not_analyzed"},
+                "link": {"type": "keyword"},
                 "hits": {"type": "integer"},
                 "avgScore": {"type": "double"},
                 "maxScore": {"type": "double"},

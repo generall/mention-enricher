@@ -87,7 +87,7 @@ def main
 
  enum.each_slice(10000).with_index do |buffer, idx|
    puts "Loading: #{idx}"
-   el.add_records(buffer, index: 'sknn-train', type: 'sentence')
+   el.add_records(buffer, index: 'sknn-data', type: 'sentence')
  end
 end
 
