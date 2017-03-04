@@ -120,7 +120,7 @@ def main(base_name)
 end
 
 if $0 == __FILE__
-  require 'pry'; binding.pry
-  #main("data/wikilinks_extended")
+  #require 'pry'; binding.pry
+  main("data/wikilinks_extended")
 end
 
