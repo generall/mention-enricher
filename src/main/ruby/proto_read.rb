@@ -25,6 +25,17 @@ class ExtWikilinksReader
     stream << "#{Protobuf::Field::VarintField.encode(byte_data.size)}#{byte_data}"    
   end
 
+  def self.read_sentence_not_decode(stream)
+    return nil if stream.eof?
+    length = Protobuf::Varint.decode(stream)
+    stream.read(length)
+  end
+
+  def self.write_sentence_not_encode(stream, snt)
+    byte_data = snt
+    stream << "#{Protobuf::Field::VarintField.encode(byte_data.size)}#{byte_data}"    
+  end
+
   def self.skip(stream, n)
     n.times{ read_sentence(stream) }
   end
@@ -66,20 +77,20 @@ def render
 end
 
 
-def read_files(fnames)
+def read_files(fnames, &block)
   Enumerator.new do |en|
     fnames.each do |fname|
-      read_mentions(fname).each do |sent|
+      read_mentions(fname, &block).each do |sent|
         en << sent
       end
     end
   end
 end
 
-def read_mentions(fname)
+def read_mentions(fname, &block)
   fstream = File.open(fname)
   Enumerator.new do |en|
-    while snt = ExtWikilinksReader.read_sentence(fstream)
+    while snt = block.call(fstream)
       en << snt
     end
   end
@@ -87,7 +98,7 @@ end
 
 
 def upload_to_elastic
- enum = read_files(ARGV)
+ enum = read_files(ARGV){ |fstream| ExtWikilinksReader.read_sentence(fstream) }
  el = WikiSeracher.new
 
  enum.each_slice(10000).with_index do |buffer, idx|
@@ -97,19 +108,19 @@ def upload_to_elastic
 end
 
 def main(base_name)
-  enum = read_files(ARGV)
+  enum = read_files(ARGV){ |fstream| ExtWikilinksReader.read_sentence_not_decode(fstream) }
   count = 500_000
   enum.each_slice(count).with_index do |buffer, idx|
     fstream = File.open("#{base_name}_part#{idx}.pb", "w")
     puts "Chunking: #{idx * count}"
     buffer.each do |sent|
-      ExtWikilinksReader.write_sentence(fstream, sent)
+      ExtWikilinksReader.write_sentence_not_encode(fstream, sent)
     end
   end
 end
 
 if $0 == __FILE__
-  #require 'pry'; binding.pry
-  main("data/wikilinks_extended")
+  require 'pry'; binding.pry
+  #main("data/wikilinks_extended")
 end
 
